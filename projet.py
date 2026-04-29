@@ -463,70 +463,7 @@ with tab2:
         </div>
         """, unsafe_allow_html=True)
 
-# =========================
-# SCENARIO GRID TAB
-# =========================
 
-with tab4:
-    st.header("Scenario Grid")
-
-    selected_option = st.radio(
-        "Option Type",
-        ["Call", "Put"],
-        horizontal=True
-    )
-
-    spot_grid = np.linspace(0.7 * S, 1.3 * S, 25)
-    vol_grid = np.linspace(max(0.01, sigma * 0.5), sigma * 1.8, 25)
-
-    matrix = []
-
-    for vol in vol_grid:
-        row = []
-        for spot in spot_grid:
-            c, p, _, _ = black_scholes(spot, K, T, r, vol, q)
-            row.append(c if selected_option == "Call" else p)
-        matrix.append(row)
-
-    heatmap_df = pd.DataFrame(
-        matrix,
-        index=np.round(vol_grid, 3),
-        columns=np.round(spot_grid, 2)
-    )
-
-    # 👉 VERSION QUI MARCHAIT
-    fig = px.imshow(
-        heatmap_df,
-        labels=dict(x="Spot Price", y="Volatility", color="Option Price"),
-        aspect="auto"
-    )
-
-    # 🔴 AJOUT HOVER ROUGE
-    fig.update_traces(
-        hovertemplate=
-        "Spot: %{x:.2f}<br>" +
-        "Vol: %{y:.2%}<br>" +
-        "Price: %{z:.4f}<extra></extra>"
-    )
-
-    fig.update_layout(
-        hoverlabel=dict(
-            bgcolor="#dc2626",   # rouge
-            font_size=16,
-            font_color="white"
-        )
-    )
-
-    # 👉 STYLE GLOBAL (comme avant)
-    fig.update_layout(
-        title=f"{selected_option} Price Heatmap",
-        template="plotly_dark",
-        paper_bgcolor="#0f172a",
-        plot_bgcolor="#0f172a",
-        font=dict(color="white")
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
 # =========================
 # SCENARIO GRID TAB
 # =========================
