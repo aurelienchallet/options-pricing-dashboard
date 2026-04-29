@@ -302,7 +302,7 @@ tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
 # =========================
 
 with tab1:
-    st.header("Black Scholes Pricer")
+    st.header("Black–Scholes Model")
 
     st.markdown("""
     <div class="info-box">
@@ -310,8 +310,6 @@ with tab1:
     The model uses spot price, strike price, time to maturity, volatility, risk free rate and dividend yield to estimate the theoretical fair value of a call or put option.
     </div>
     """, unsafe_allow_html=True)
-
-    st.markdown("### Black–Scholes Model")
 
     st.latex(r"C = S e^{-qT} N(d_1) - K e^{-rT} N(d_2)")
     st.latex(r"P = K e^{-rT} N(-d_2) - S e^{-qT} N(-d_1)")
