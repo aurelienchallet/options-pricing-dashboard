@@ -683,7 +683,7 @@ with tab6:
 
     # Stylised skew (example, not real data)
     base_vol = sigma
-    skew = base_vol + 0.4 * (K - strikes) / K
+    skew = base_vol + 0.6 * np.maximum((K - strikes) / K, 0)**1.5
 
     fig = go.Figure()
 
