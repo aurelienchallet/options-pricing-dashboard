@@ -302,69 +302,73 @@ tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
 # =========================
 
 with tab1:
-    st.header("Black–Scholes Model")
+    st.header("Black-Scholes Pricer")
 
-    st.markdown("""
-    <div class="info-box">
-    The Black Scholes model prices European options under the assumption that the underlying asset follows a lognormal diffusion process.
-    The model uses spot price, strike price, time to maturity, volatility, risk free rate and dividend yield to estimate the theoretical fair value of a call or put option.
-    </div>
-    """, unsafe_allow_html=True)
+    left_col, right_col = st.columns([1.15, 1])
 
-    st.latex(r"C = S e^{-qT} N(d_1) - K e^{-rT} N(d_2)")
-    st.latex(r"P = K e^{-rT} N(-d_2) - S e^{-qT} N(-d_1)")
+    with left_col:
+        st.markdown("""
+        <div class="info-box">
+        The Black-Scholes model prices European options by assuming that the underlying asset price follows a lognormal diffusion process.
+        It uses spot price, strike price, time to maturity, volatility, risk-free rate and dividend yield to estimate theoretical call and put prices.
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.latex(r"d_1 = \frac{\ln(S/K) + (r - q + \frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}}")
-    st.latex(r"d_2 = d_1 - \sigma\sqrt{T}")
+        st.markdown("### Black-Scholes Model")
 
-st.markdown("### Model Inputs")
+        st.latex(r"C = S e^{-qT} N(d_1) - K e^{-rT} N(d_2)")
+        st.latex(r"P = K e^{-rT} N(-d_2) - S e^{-qT} N(-d_1)")
+        st.latex(r"d_1 = \frac{\ln(S/K) + (r - q + \frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}}")
+        st.latex(r"d_2 = d_1 - \sigma\sqrt{T}")
 
-col1, col2, col3 = st.columns(3)
+    with right_col:
+        st.markdown("### Model Inputs")
 
-with col1:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Spot Price</div>
-        <div class="metric-value">{S}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        input_col1, input_col2 = st.columns(2)
 
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Strike</div>
-        <div class="metric-value">{K}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        with input_col1:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Spot Price</div>
+                <div class="metric-value">{S}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-with col2:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Maturity</div>
-        <div class="metric-value">{T}</div>
-    </div>
-    """, unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Maturity</div>
+                <div class="metric-value">{T}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Volatility</div>
-        <div class="metric-value">{sigma:.2%}</div>
-    </div>
-    """, unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Risk-Free Rate</div>
+                <div class="metric-value">{r:.2%}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-with col3:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Risk-Free Rate</div>
-        <div class="metric-value">{r:.2%}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        with input_col2:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Strike</div>
+                <div class="metric-value">{K}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Dividend Yield</div>
-        <div class="metric-value">{q:.2%}</div>
-    </div>
-    """, unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Volatility</div>
+                <div class="metric-value">{sigma:.2%}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Dividend Yield</div>
+                <div class="metric-value">{q:.2%}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
 
 
