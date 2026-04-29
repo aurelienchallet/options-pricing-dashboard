@@ -527,7 +527,7 @@ with tab4:
         plot_bgcolor="#0f172a",
         font=dict(color="white"),
         hoverlabel=dict(
-            bgcolor="#dc2626",
+            bgcolor="white",
             bordercolor="white",
             font_size=16,
             font_color="white"
