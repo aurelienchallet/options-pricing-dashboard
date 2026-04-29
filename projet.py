@@ -641,10 +641,5 @@ with tab6:
 
     st.dataframe(skew_df, use_container_width=True, hide_index=True)
 
-    st.markdown("""
-    <div class="info-box">
-    When K / S is below 1, the strike is below the current spot price. For put options, this corresponds to downside protection.
-    Investors are often willing to pay a premium for this protection, which pushes implied volatility higher for out of the money puts.
-    </div>
-    """, unsafe_allow_html=True)
+    
 
