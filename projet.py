@@ -306,7 +306,7 @@ with tab1:
     left_col, right_col = st.columns([1.15, 1])
 
     with left_col:
-        st.header("Black-Scholes Pricer")
+        st.header("Black-Scholes Model")
 
         st.markdown("""
         <div class="info-box">
@@ -314,8 +314,6 @@ with tab1:
         It uses spot price, strike price, time to maturity, volatility, risk-free rate and dividend yield to estimate theoretical call and put prices.
         </div>
         """, unsafe_allow_html=True)
-
-        st.markdown("### Black-Scholes Model")
 
         st.latex(r"C = S e^{-qT} N(d_1) - K e^{-rT} N(d_2)")
         st.latex(r"P = K e^{-rT} N(-d_2) - S e^{-qT} N(-d_1)")
