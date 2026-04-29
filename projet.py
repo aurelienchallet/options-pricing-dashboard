@@ -310,7 +310,7 @@ with tab1:
 
         st.markdown("""
         <div class="info-box">
-        The Black-Scholes model prices European options by assuming that the underlying asset price follows a lognormal diffusion process.
+        The Black–Scholes model prices European options by assuming that the underlying asset price follows a geometric Brownian motion.
         It uses spot price, strike price, time to maturity, volatility, risk-free rate and dividend yield to estimate theoretical call and put prices.
         </div>
         """, unsafe_allow_html=True)
