@@ -228,7 +228,7 @@ st.sidebar.caption("Inputs are expressed in decimals. Example: 20 percent volati
 st.sidebar.markdown("""
 <div style="margin-top:8px; padding-top:8px; border-top:1px solid #1e293b; text-align:center;">
     <span style="font-size:12px; color:#64748b;">
-        Developed by
+        Designed and developed by
     </span><br>
     <span style="font-size:13px; color:#e2e8f0; font-weight:500;">
         Aurélien Challet
