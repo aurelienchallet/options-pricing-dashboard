@@ -660,56 +660,66 @@ with tab5:
 
 
 # =========================
-# VOL SKEW TAB
+# VOLATILITY SKEW TAB
 # =========================
 
 with tab6:
     st.header("Volatility Skew")
 
     st.markdown("""
-    <div class="info-box">
-    Equity options often exhibit a volatility skew: out of the money puts tend to trade at higher implied volatilities than out of the money calls.
-    This reflects investors' demand for downside protection, risk aversion and the market pricing of crash risk.
-    </div>
-    """, unsafe_allow_html=True)
+    ### Volatility Skew
 
-    strikes = np.linspace(S * 0.7, S * 1.3, 40)
-    moneyness = strikes / S
+    The Black–Scholes model assumes constant volatility across strikes.
 
+    In reality, implied volatility varies with strike. 
+    Out-of-the-money puts typically exhibit higher implied volatility than calls, 
+    reflecting the market’s demand for downside protection.
+
+    For illustration purposes, the chart below shows a typical volatility skew shape.
+    """)
+
+    # Strike range
+    strikes = np.linspace(0.7 * K, 1.3 * K, 100)
+
+    # Stylised skew (example, not real data)
     base_vol = sigma
-    skew_strength = st.slider("Skew Strength", 0.00, 0.60, 0.25, 0.01)
-
-    implied_vols = []
-
-    for k in strikes:
-        m = k / S
-        vol = base_vol + skew_strength * max(1 - m, 0) + 0.05 * (m - 1) ** 2
-        implied_vols.append(vol)
-
-    skew_df = pd.DataFrame({
-        "Strike": strikes,
-        "Moneyness K/S": moneyness,
-        "Implied Volatility": implied_vols
-    })
+    skew = base_vol + 0.4 * (K - strikes) / K
 
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
-        x=skew_df["Moneyness K/S"],
-        y=skew_df["Implied Volatility"],
-        mode="lines+markers",
-        name="Implied Volatility Skew",
-        line=dict(color="#38bdf8", width=3)
+        x=strikes,
+        y=skew,
+        mode="lines",
+        name="Implied Volatility",
+        line=dict(width=3)
     ))
 
-    fig.add_vline(x=1.0, line_dash="dash", line_color="#facc15")
-    fig.update_xaxes(title="Moneyness, K / S")
-    fig.update_yaxes(title="Implied Volatility")
+    # ATM line
+    fig.add_vline(x=K, line_dash="dash", line_color="#facc15")
 
-    fig = plotly_layout(fig, "Equity Volatility Skew")
+    fig.update_layout(
+        template="plotly_dark",
+        paper_bgcolor="#0f172a",
+        plot_bgcolor="#0f172a",
+        font=dict(color="white"),
+        margin=dict(l=40, r=40, t=20, b=40),
+        height=450
+    )
+
+    fig.update_xaxes(
+        title="Strike",
+        title_font=dict(color="white"),
+        tickfont=dict(color="white")
+    )
+
+    fig.update_yaxes(
+        title="Implied Volatility",
+        title_font=dict(color="white"),
+        tickfont=dict(color="white")
+    )
+
     st.plotly_chart(fig, use_container_width=True)
-
-    st.dataframe(skew_df, use_container_width=True, hide_index=True)
 
     
 
