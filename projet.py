@@ -374,67 +374,103 @@ with tab1:
 # GREEKS TAB
 # =========================
 
-st.markdown("### Greeks Overview")
+# =========================
+# GREEKS TAB
+# =========================
 
-col1, col2 = st.columns(2)
+with tab2:
+    st.header("Greeks Overview")
 
-with col1:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Δ Call Delta</div>
-        <div class="metric-value">{greeks_result["Call Delta"]:.4f}</div>
+    st.markdown("""
+    <div class="info-box">
+    Greeks measure the sensitivity of an option price to changes in market variables.
+    They are essential for risk management, hedging and understanding the behaviour of an options portfolio.
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Γ Gamma</div>
-        <div class="metric-value">{greeks_result["Gamma"]:.4f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    col_left, col_right = st.columns(2)
 
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Θ Call Theta</div>
-        <div class="metric-value">{greeks_result["Call Theta"]:.4f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    # =========================
+    # CALL SIDE
+    # =========================
+    with col_left:
+        st.markdown("### Call Option")
 
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">ρ Call Rho</div>
-        <div class="metric-value">{greeks_result["Call Rho"]:.4f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">Δ Delta</div>
+            <div class="metric-value">{greeks_result["Call Delta"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-with col2:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Δ Put Delta</div>
-        <div class="metric-value">{greeks_result["Put Delta"]:.4f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">Γ Gamma</div>
+            <div class="metric-value">{greeks_result["Gamma"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">ν Vega</div>
-        <div class="metric-value">{greeks_result["Vega"]:.4f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">ν Vega</div>
+            <div class="metric-value">{greeks_result["Vega"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">Θ Put Theta</div>
-        <div class="metric-value">{greeks_result["Put Theta"]:.4f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">Θ Theta</div>
+            <div class="metric-value">{greeks_result["Call Theta"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">ρ Put Rho</div>
-        <div class="metric-value">{greeks_result["Put Rho"]:.4f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">ρ Rho</div>
+            <div class="metric-value">{greeks_result["Call Rho"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # =========================
+    # PUT SIDE
+    # =========================
+    with col_right:
+        st.markdown("### Put Option")
+
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">Δ Delta</div>
+            <div class="metric-value">{greeks_result["Put Delta"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">Γ Gamma</div>
+            <div class="metric-value">{greeks_result["Gamma"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">ν Vega</div>
+            <div class="metric-value">{greeks_result["Vega"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">Θ Theta</div>
+            <div class="metric-value">{greeks_result["Put Theta"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">ρ Rho</div>
+            <div class="metric-value">{greeks_result["Put Rho"]:.4f}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # =========================
 # PAYOFF TAB
