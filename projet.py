@@ -468,7 +468,6 @@ with tab2:
 # =========================
 
 with tab3:
-    st.header("Payoff and Profit Analysis")
 
     S_range = np.linspace(S * 0.5, S * 1.5, 200)
 
@@ -480,23 +479,58 @@ with tab3:
 
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=S_range, y=call_profit, mode="lines", name="Call Profit"))
-    fig.add_trace(go.Scatter(x=S_range, y=put_profit, mode="lines", name="Put Profit"))
+    fig.add_trace(go.Scatter(
+        x=S_range,
+        y=call_profit,
+        mode="lines",
+        name="Call Profit",
+        line=dict(width=3)
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=S_range,
+        y=put_profit,
+        mode="lines",
+        name="Put Profit",
+        line=dict(width=3)
+    ))
+
     fig.add_hline(y=0, line_dash="dash", line_color="white")
     fig.add_vline(x=K, line_dash="dash", line_color="#facc15")
 
-    fig.update_xaxes(title="Underlying Price at Maturity")
-    fig.update_yaxes(title="Profit and Loss")
+    fig.update_xaxes(
+        title="Underlying Price at Maturity",
+        title_font=dict(color="white"),
+        tickfont=dict(color="white"),
+        gridcolor="rgba(255,255,255,0.25)"
+    )
 
-    fig = plotly_layout(fig, "Option Profit and Loss at Maturity")
+    fig.update_yaxes(
+        title="Profit and Loss",
+        title_font=dict(color="white"),
+        tickfont=dict(color="white"),
+        gridcolor="rgba(255,255,255,0.25)"
+    )
+
+    fig.update_layout(
+        title=dict(
+            text="Payoff and Profit Analysis",
+            font=dict(color="white", size=24),
+            x=0.02
+        ),
+        template="plotly_dark",
+        paper_bgcolor="#0f172a",
+        plot_bgcolor="#0f172a",
+        font=dict(color="white"),
+        legend=dict(
+            font=dict(color="white"),
+            bgcolor="rgba(0,0,0,0)"
+        ),
+        margin=dict(l=40, r=40, t=60, b=40),
+        height=560
+    )
+
     st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("""
-    <div class="info-box">
-    A long call benefits from upside moves above the strike, while the maximum loss is limited to the premium paid.
-    A long put benefits from downside moves below the strike, while the maximum loss is also limited to the premium paid.
-    </div>
-    """, unsafe_allow_html=True)
 
 # =========================
 # SCENARIO GRID TAB
