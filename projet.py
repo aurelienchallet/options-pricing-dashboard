@@ -277,20 +277,10 @@ with col2:
     """, unsafe_allow_html=True)
 
 with col3:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">d1</div>
-        <div class="metric-value">{d1:.4f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.empty()
 
 with col4:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">d2</div>
-        <div class="metric-value">{d2:.4f}</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.empty()
 
 st.divider()
 
