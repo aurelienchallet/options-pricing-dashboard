@@ -563,13 +563,6 @@ with tab4:
 with tab4:
     st.header("Scenario Grid")
 
-    st.markdown("""
-    <div class="info-box">
-    The scenario grid shows how the option price changes across different combinations of spot price and volatility.
-    This helps visualise the impact of market moves and volatility shocks on the option value.
-    </div>
-    """, unsafe_allow_html=True)
-
     selected_option = st.radio(
         "Option Type",
         ["Call", "Put"],
@@ -602,8 +595,10 @@ with tab4:
             y=heatmap_df.index,
             colorscale="Turbo",
             colorbar=dict(
-                title="Option Price",
-                titlefont=dict(color="white"),
+                title=dict(
+                    text="Option Price",
+                    font=dict(color="white")
+                ),
                 tickfont=dict(color="white")
             ),
             hovertemplate=
@@ -616,7 +611,7 @@ with tab4:
     fig.update_layout(
         title=dict(
             text=f"{selected_option} Price Sensitivity Grid",
-            font=dict(color="white", size=24),
+            font=dict(color="white", size=22),
             x=0.02
         ),
         template="plotly_dark",
@@ -629,8 +624,8 @@ with tab4:
             font_size=16,
             font_color="white"
         ),
-        margin=dict(l=50, r=40, t=60, b=45),
-        height=560
+        margin=dict(l=50, r=40, t=50, b=40),
+        height=520
     )
 
     fig.update_xaxes(
