@@ -224,6 +224,15 @@ q = st.sidebar.number_input("Dividend Yield", value=0.00, step=0.005, format="%.
 
 st.sidebar.divider()
 st.sidebar.caption("Inputs are expressed in decimals. Example: 20 percent volatility equals 0.20.")
+st.sidebar.markdown("""
+<br>
+<hr style="border:0.5px solid #1e293b">
+
+<p style='text-align:center; color:#64748b; font-size:13px;'>
+Designed and developed by<br>
+<b style="color:#cbd5f5;">Aurélien Challet</b>
+</p>
+""", unsafe_allow_html=True)
 
 # =========================
 # HEADER
