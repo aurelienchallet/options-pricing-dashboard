@@ -527,10 +527,3 @@ with tab6:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <hr style="margin-top:50px; border:0.5px solid #334155">
-
-    <p style='text-align:center; color:#94a3b8; font-size:14px;'>
-    Designed and developed by <b>Aurélien Challet</b>
-    </p>
-    """, unsafe_allow_html=True)
