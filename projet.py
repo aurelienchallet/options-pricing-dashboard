@@ -302,13 +302,28 @@ tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
 # =========================
 
 with tab1:
-    st.header("Black-Scholes Pricer")
 
     left_col, right_col = st.columns([1.15, 1])
 
-    # 👉 COLONNE DROITE D'ABORD (IMPORTANT)
+    with left_col:
+        st.header("Black-Scholes Pricer")
+
+        st.markdown("""
+        <div class="info-box">
+        The Black-Scholes model prices European options by assuming that the underlying asset price follows a lognormal diffusion process.
+        It uses spot price, strike price, time to maturity, volatility, risk-free rate and dividend yield to estimate theoretical call and put prices.
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("### Black-Scholes Model")
+
+        st.latex(r"C = S e^{-qT} N(d_1) - K e^{-rT} N(d_2)")
+        st.latex(r"P = K e^{-rT} N(-d_2) - S e^{-qT} N(-d_1)")
+        st.latex(r"d_1 = \frac{\ln(S/K) + (r - q + \frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}}")
+        st.latex(r"d_2 = d_1 - \sigma\sqrt{T}")
+
     with right_col:
-        st.markdown("### Model Inputs")
+        st.header("Model Inputs")
 
         input_col1, input_col2 = st.columns(2)
 
@@ -355,23 +370,6 @@ with tab1:
                 <div class="metric-value">{q:.2%}</div>
             </div>
             """, unsafe_allow_html=True)
-
-    # 👉 COLONNE GAUCHE ENSUITE
-    with left_col:
-        st.markdown("""
-        <div class="info-box">
-        The Black-Scholes model prices European options by assuming that the underlying asset price follows a lognormal diffusion process.
-        It uses spot price, strike price, time to maturity, volatility, risk-free rate and dividend yield to estimate theoretical call and put prices.
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown("### Black-Scholes Model")
-
-        st.latex(r"C = S e^{-qT} N(d_1) - K e^{-rT} N(d_2)")
-        st.latex(r"P = K e^{-rT} N(-d_2) - S e^{-qT} N(-d_1)")
-        st.latex(r"d_1 = \frac{\ln(S/K) + (r - q + \frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}}")
-        st.latex(r"d_2 = d_1 - \sigma\sqrt{T}")
-
 
 
 # =========================
