@@ -1,0 +1,528 @@
+import streamlit as st
+import numpy as np
+import pandas as pd
+import math
+import plotly.graph_objects as go
+import plotly.express as px
+
+# =========================
+# PAGE CONFIG
+# =========================
+
+st.set_page_config(
+    page_title="Options Pricing Dashboard",
+    page_icon="📈",
+    layout="wide"
+)
+
+# =========================
+# STYLE
+# =========================
+
+st.markdown("""
+<style>
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #020617, #0f172a);
+}
+
+[data-testid="stSidebar"] {
+    background-color: #020617;
+}
+
+.block-container {
+    padding-top: 2rem;
+}
+
+h1, h2, h3 {
+    color: #f8fafc !important;
+}
+
+p, label, span, div {
+    color: #e5e7eb;
+}
+
+.metric-card {
+    background: linear-gradient(135deg, #111827, #1e293b);
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid #334155;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+.metric-title {
+    color: #94a3b8;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.metric-value {
+    color: #38bdf8;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.info-box {
+    background: #0f172a;
+    padding: 22px;
+    border-radius: 16px;
+    border: 1px solid #334155;
+    margin-bottom: 18px;
+}
+
+.formula-box {
+    background: #020617;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #1e40af;
+    color: #dbeafe;
+    margin-bottom: 18px;
+}
+
+.small-text {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.stTabs [data-baseweb="tab-list"] {
+    gap: 10px;
+}
+
+.stTabs [data-baseweb="tab"] {
+    background-color: #111827;
+    border-radius: 12px;
+    padding: 10px 18px;
+    color: white;
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: #2563eb;
+}
+
+[data-testid="stMetricValue"] {
+    color: #38bdf8;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #cbd5e1;
+}
+
+.stDataFrame {
+    border-radius: 14px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
+# BLACK SCHOLES FUNCTIONS
+# =========================
+
+def norm_cdf(x):
+    return 0.5 * (1 + math.erf(x / math.sqrt(2)))
+
+def norm_pdf(x):
+    return (1 / math.sqrt(2 * math.pi)) * math.exp(-0.5 * x * x)
+
+def black_scholes(S, K, T, r, sigma, q=0.0):
+    if T <= 0 or sigma <= 0 or S <= 0 or K <= 0:
+        return None
+
+    d1 = (math.log(S / K) + (r - q + 0.5 * sigma ** 2) * T) / (sigma * math.sqrt(T))
+    d2 = d1 - sigma * math.sqrt(T)
+
+    call = S * math.exp(-q * T) * norm_cdf(d1) - K * math.exp(-r * T) * norm_cdf(d2)
+    put = K * math.exp(-r * T) * norm_cdf(-d2) - S * math.exp(-q * T) * norm_cdf(-d1)
+
+    return call, put, d1, d2
+
+def greeks(S, K, T, r, sigma, q=0.0):
+    result = black_scholes(S, K, T, r, sigma, q)
+
+    if result is None:
+        return None
+
+    call, put, d1, d2 = result
+
+    call_delta = math.exp(-q * T) * norm_cdf(d1)
+    put_delta = math.exp(-q * T) * (norm_cdf(d1) - 1)
+
+    gamma = math.exp(-q * T) * norm_pdf(d1) / (S * sigma * math.sqrt(T))
+    vega = S * math.exp(-q * T) * norm_pdf(d1) * math.sqrt(T) / 100
+
+    call_theta = (
+        -(S * math.exp(-q * T) * norm_pdf(d1) * sigma) / (2 * math.sqrt(T))
+        - r * K * math.exp(-r * T) * norm_cdf(d2)
+        + q * S * math.exp(-q * T) * norm_cdf(d1)
+    ) / 365
+
+    put_theta = (
+        -(S * math.exp(-q * T) * norm_pdf(d1) * sigma) / (2 * math.sqrt(T))
+        + r * K * math.exp(-r * T) * norm_cdf(-d2)
+        - q * S * math.exp(-q * T) * norm_cdf(-d1)
+    ) / 365
+
+    call_rho = K * T * math.exp(-r * T) * norm_cdf(d2) / 100
+    put_rho = -K * T * math.exp(-r * T) * norm_cdf(-d2) / 100
+
+    return {
+        "Call Delta": call_delta,
+        "Put Delta": put_delta,
+        "Gamma": gamma,
+        "Vega": vega,
+        "Call Theta": call_theta,
+        "Put Theta": put_theta,
+        "Call Rho": call_rho,
+        "Put Rho": put_rho
+    }
+
+def implied_volatility(market_price, S, K, T, r, q, option_type):
+    low = 0.0001
+    high = 5.0
+
+    for _ in range(100):
+        mid = (low + high) / 2
+        call, put, _, _ = black_scholes(S, K, T, r, mid, q)
+
+        model_price = call if option_type == "Call" else put
+
+        if abs(model_price - market_price) < 1e-6:
+            return mid
+
+        if model_price > market_price:
+            high = mid
+        else:
+            low = mid
+
+    return mid
+
+def plotly_layout(fig, title):
+    fig.update_layout(
+        title=title,
+        template="plotly_dark",
+        paper_bgcolor="#0f172a",
+        plot_bgcolor="#0f172a",
+        font=dict(color="#e5e7eb"),
+        margin=dict(l=40, r=40, t=70, b=40),
+        height=520
+    )
+    return fig
+
+# =========================
+# SIDEBAR INPUTS
+# =========================
+
+st.sidebar.title("Options Pricing Dashboard")
+st.sidebar.caption("Professional derivatives analytics terminal")
+
+st.sidebar.divider()
+
+S = st.sidebar.number_input("Spot Price", min_value=0.01, value=100.0, step=1.0)
+K = st.sidebar.number_input("Strike Price", min_value=0.01, value=100.0, step=1.0)
+T = st.sidebar.number_input("Time to Maturity, in years", min_value=0.01, value=1.0, step=0.05)
+r = st.sidebar.number_input("Risk Free Rate", value=0.03, step=0.005, format="%.4f")
+sigma = st.sidebar.number_input("Volatility", min_value=0.001, value=0.20, step=0.01, format="%.4f")
+q = st.sidebar.number_input("Dividend Yield", value=0.00, step=0.005, format="%.4f")
+
+st.sidebar.divider()
+st.sidebar.caption("Inputs are expressed in decimals. Example: 20 percent volatility equals 0.20.")
+
+# =========================
+# HEADER
+# =========================
+
+st.title("Options Pricing Dashboard")
+st.markdown(
+    "<p class='small-text'>A professional dashboard for Black Scholes pricing, Greeks, implied volatility, payoff analysis, scenario grids and volatility skew.</p>",
+    unsafe_allow_html=True
+)
+
+result = black_scholes(S, K, T, r, sigma, q)
+greeks_result = greeks(S, K, T, r, sigma, q)
+
+if result is None:
+    st.error("Please check your inputs.")
+    st.stop()
+
+call_price, put_price, d1, d2 = result
+
+# =========================
+# TOP METRICS
+# =========================
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Call Price</div>
+        <div class="metric-value">{call_price:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Put Price</div>
+        <div class="metric-value">{put_price:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">d1</div>
+        <div class="metric-value">{d1:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col4:
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">d2</div>
+        <div class="metric-value">{d2:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.divider()
+
+# =========================
+# TABS
+# =========================
+
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    "Black Scholes",
+    "Greeks",
+    "Payoff",
+    "Scenario Grid",
+    "Implied Volatility",
+    "Volatility Skew"
+])
+
+# =========================
+# BLACK SCHOLES TAB
+# =========================
+
+with tab1:
+    st.header("Black Scholes Pricer")
+
+    st.markdown("""
+    <div class="info-box">
+    The Black Scholes model prices European options under the assumption that the underlying asset follows a lognormal diffusion process.
+    The model uses spot price, strike price, time to maturity, volatility, risk free rate and dividend yield to estimate the theoretical fair value of a call or put option.
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="formula-box">
+    Call = S e^{-qT} N(d1) − K e^{-rT} N(d2)<br>
+    Put = K e^{-rT} N(−d2) − S e^{-qT} N(−d1)<br><br>
+    d1 = [ln(S/K) + (r − q + σ²/2)T] / [σ√T]<br>
+    d2 = d1 − σ√T
+    </div>
+    """, unsafe_allow_html=True)
+
+    data = pd.DataFrame({
+        "Metric": ["Spot", "Strike", "Maturity", "Risk Free Rate", "Dividend Yield", "Volatility", "Call Price", "Put Price"],
+        "Value": [S, K, T, r, q, sigma, call_price, put_price]
+    })
+
+    st.dataframe(data, use_container_width=True, hide_index=True)
+
+# =========================
+# GREEKS TAB
+# =========================
+
+with tab2:
+    st.header("Greeks Monitor")
+
+    st.markdown("""
+    <div class="info-box">
+    Greeks measure the sensitivity of an option price to changes in market variables.
+    They are essential for risk management, hedging and understanding the behaviour of an options portfolio.
+    </div>
+    """, unsafe_allow_html=True)
+
+    greek_df = pd.DataFrame({
+        "Greek": list(greeks_result.keys()),
+        "Value": list(greeks_result.values())
+    })
+
+    st.dataframe(greek_df, use_container_width=True, hide_index=True)
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=greek_df["Greek"],
+        y=greek_df["Value"],
+        marker_color="#38bdf8"
+    ))
+    fig = plotly_layout(fig, "Greeks Overview")
+    st.plotly_chart(fig, use_container_width=True)
+
+# =========================
+# PAYOFF TAB
+# =========================
+
+with tab3:
+    st.header("Payoff and Profit Analysis")
+
+    S_range = np.linspace(S * 0.5, S * 1.5, 200)
+
+    call_payoff = np.maximum(S_range - K, 0)
+    put_payoff = np.maximum(K - S_range, 0)
+
+    call_profit = call_payoff - call_price
+    put_profit = put_payoff - put_price
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=S_range, y=call_profit, mode="lines", name="Call Profit"))
+    fig.add_trace(go.Scatter(x=S_range, y=put_profit, mode="lines", name="Put Profit"))
+    fig.add_hline(y=0, line_dash="dash", line_color="white")
+    fig.add_vline(x=K, line_dash="dash", line_color="#facc15")
+
+    fig.update_xaxes(title="Underlying Price at Maturity")
+    fig.update_yaxes(title="Profit and Loss")
+
+    fig = plotly_layout(fig, "Option Profit and Loss at Maturity")
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("""
+    <div class="info-box">
+    A long call benefits from upside moves above the strike, while the maximum loss is limited to the premium paid.
+    A long put benefits from downside moves below the strike, while the maximum loss is also limited to the premium paid.
+    </div>
+    """, unsafe_allow_html=True)
+
+# =========================
+# SCENARIO GRID TAB
+# =========================
+
+with tab4:
+    st.header("Scenario Grid and Heatmap")
+
+    st.markdown("""
+    <div class="info-box">
+    The scenario grid shows how the option value changes across different underlying prices and volatility levels.
+    This is useful for stress testing, risk monitoring and understanding non linear exposure.
+    </div>
+    """, unsafe_allow_html=True)
+
+    spot_grid = np.linspace(S * 0.7, S * 1.3, 25)
+    vol_grid = np.linspace(max(0.01, sigma * 0.5), sigma * 1.8, 25)
+
+    selected_option = st.radio("Option Type", ["Call", "Put"], horizontal=True)
+
+    matrix = []
+
+    for vol in vol_grid:
+        row = []
+        for spot in spot_grid:
+            c, p, _, _ = black_scholes(spot, K, T, r, vol, q)
+            row.append(c if selected_option == "Call" else p)
+        matrix.append(row)
+
+    heatmap_df = pd.DataFrame(matrix, index=np.round(vol_grid, 3), columns=np.round(spot_grid, 2))
+
+    fig = px.imshow(
+        heatmap_df,
+        labels=dict(x="Spot Price", y="Volatility", color="Option Price"),
+        aspect="auto"
+    )
+
+    fig = plotly_layout(fig, f"{selected_option} Price Heatmap")
+    st.plotly_chart(fig, use_container_width=True)
+
+# =========================
+# IMPLIED VOL TAB
+# =========================
+
+with tab5:
+    st.header("Implied Volatility Solver")
+
+    st.markdown("""
+    <div class="info-box">
+    Implied volatility is the volatility level that makes the Black Scholes theoretical price equal to the observed market price.
+    Traders often quote options in volatility rather than in price because implied volatility allows comparison across strikes and maturities.
+    </div>
+    """, unsafe_allow_html=True)
+
+    col_a, col_b = st.columns(2)
+
+    with col_a:
+        option_type_iv = st.radio("Option Type for IV", ["Call", "Put"], horizontal=True)
+        market_price = st.number_input("Market Option Price", min_value=0.01, value=float(call_price if option_type_iv == "Call" else put_price), step=0.1)
+
+    with col_b:
+        iv = implied_volatility(market_price, S, K, T, r, q, option_type_iv)
+
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">Implied Volatility</div>
+            <div class="metric-value">{iv:.2%}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="info-box">
+    If the implied volatility is higher than your own expected future realised volatility, the option may appear expensive.
+    If it is lower, the option may appear cheap, depending on hedging costs, liquidity and risk preferences.
+    </div>
+    """, unsafe_allow_html=True)
+
+# =========================
+# VOL SKEW TAB
+# =========================
+
+with tab6:
+    st.header("Volatility Skew")
+
+    st.markdown("""
+    <div class="info-box">
+    Equity options often exhibit a volatility skew: out of the money puts tend to trade at higher implied volatilities than out of the money calls.
+    This reflects investors' demand for downside protection, risk aversion and the market pricing of crash risk.
+    </div>
+    """, unsafe_allow_html=True)
+
+    strikes = np.linspace(S * 0.7, S * 1.3, 40)
+    moneyness = strikes / S
+
+    base_vol = sigma
+    skew_strength = st.slider("Skew Strength", 0.00, 0.60, 0.25, 0.01)
+
+    implied_vols = []
+
+    for k in strikes:
+        m = k / S
+        vol = base_vol + skew_strength * max(1 - m, 0) + 0.05 * (m - 1) ** 2
+        implied_vols.append(vol)
+
+    skew_df = pd.DataFrame({
+        "Strike": strikes,
+        "Moneyness K/S": moneyness,
+        "Implied Volatility": implied_vols
+    })
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=skew_df["Moneyness K/S"],
+        y=skew_df["Implied Volatility"],
+        mode="lines+markers",
+        name="Implied Volatility Skew",
+        line=dict(color="#38bdf8", width=3)
+    ))
+
+    fig.add_vline(x=1.0, line_dash="dash", line_color="#facc15")
+    fig.update_xaxes(title="Moneyness, K / S")
+    fig.update_yaxes(title="Implied Volatility")
+
+    fig = plotly_layout(fig, "Equity Volatility Skew")
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.dataframe(skew_df, use_container_width=True, hide_index=True)
+
+    st.markdown("""
+    <div class="info-box">
+    When K / S is below 1, the strike is below the current spot price. For put options, this corresponds to downside protection.
+    Investors are often willing to pay a premium for this protection, which pushes implied volatility higher for out of the money puts.
+    </div>
+    """, unsafe_allow_html=True)
