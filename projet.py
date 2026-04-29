@@ -530,7 +530,7 @@ with tab4:
             bgcolor="white",
             bordercolor="white",
             font_size=16,
-            font_color="white"
+            font_color="black"
         ),
         margin=dict(l=50, r=40, t=50, b=40),
         height=520
