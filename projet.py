@@ -537,19 +537,24 @@ with tab3:
 # =========================
 
 with tab4:
-    st.header("Scenario Grid and Heatmap")
+    st.header("Scenario Grid")
 
     st.markdown("""
     <div class="info-box">
-    The scenario grid shows how the option value changes across different underlying prices and volatility levels.
-    This is useful for stress testing, risk monitoring and understanding non linear exposure.
+    The scenario grid shows how the option price changes across different combinations of spot price and volatility.
+    This helps visualise the impact of market moves and volatility shocks on the option value.
     </div>
     """, unsafe_allow_html=True)
 
-    spot_grid = np.linspace(S * 0.7, S * 1.3, 25)
-    vol_grid = np.linspace(max(0.01, sigma * 0.5), sigma * 1.8, 25)
+    selected_option = st.radio(
+        "Option Type",
+        ["Call", "Put"],
+        horizontal=True,
+        key="scenario_option_type"
+    )
 
-    selected_option = st.radio("Option Type", ["Call", "Put"], horizontal=True)
+    spot_grid = np.linspace(0.5 * S, 1.5 * S, 30)
+    vol_grid = np.linspace(max(0.01, sigma * 0.5), sigma * 1.8, 30)
 
     matrix = []
 
@@ -560,15 +565,65 @@ with tab4:
             row.append(c if selected_option == "Call" else p)
         matrix.append(row)
 
-    heatmap_df = pd.DataFrame(matrix, index=np.round(vol_grid, 3), columns=np.round(spot_grid, 2))
-
-    fig = px.imshow(
-        heatmap_df,
-        labels=dict(x="Spot Price", y="Volatility", color="Option Price"),
-        aspect="auto"
+    heatmap_df = pd.DataFrame(
+        matrix,
+        index=np.round(vol_grid, 4),
+        columns=np.round(spot_grid, 2)
     )
 
-    fig = plotly_layout(fig, f"{selected_option} Price Heatmap")
+    fig = go.Figure(
+        data=go.Heatmap(
+            z=heatmap_df.values,
+            x=heatmap_df.columns,
+            y=heatmap_df.index,
+            colorscale="Turbo",
+            colorbar=dict(
+                title="Option Price",
+                titlefont=dict(color="white"),
+                tickfont=dict(color="white")
+            ),
+            hovertemplate=
+            "Spot Price: %{x:.2f}<br>" +
+            "Volatility: %{y:.2%}<br>" +
+            "Option Price: %{z:.4f}<extra></extra>"
+        )
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=f"{selected_option} Price Sensitivity Grid",
+            font=dict(color="white", size=24),
+            x=0.02
+        ),
+        template="plotly_dark",
+        paper_bgcolor="#0f172a",
+        plot_bgcolor="#0f172a",
+        font=dict(color="white"),
+        hoverlabel=dict(
+            bgcolor="#dc2626",
+            bordercolor="white",
+            font_size=16,
+            font_color="white"
+        ),
+        margin=dict(l=50, r=40, t=60, b=45),
+        height=560
+    )
+
+    fig.update_xaxes(
+        title="Spot Price",
+        title_font=dict(color="white"),
+        tickfont=dict(color="white"),
+        gridcolor="rgba(255,255,255,0.20)"
+    )
+
+    fig.update_yaxes(
+        title="Volatility",
+        title_font=dict(color="white"),
+        tickfont=dict(color="white"),
+        gridcolor="rgba(255,255,255,0.20)",
+        tickformat=".0%"
+    )
+
     st.plotly_chart(fig, use_container_width=True)
 
 # =========================
