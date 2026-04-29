@@ -311,21 +311,15 @@ with tab1:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div class="formula-box">
-    Call = S e^{-qT} N(d1) − K e^{-rT} N(d2)<br>
-    Put = K e^{-rT} N(−d2) − S e^{-qT} N(−d1)<br><br>
-    d1 = [ln(S/K) + (r − q + σ²/2)T] / [σ√T]<br>
-    d2 = d1 − σ√T
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("### Black–Scholes Model")
 
-    data = pd.DataFrame({
-        "Metric": ["Spot", "Strike", "Maturity", "Risk Free Rate", "Dividend Yield", "Volatility", "Call Price", "Put Price"],
-        "Value": [S, K, T, r, q, sigma, call_price, put_price]
-    })
+    st.latex(r"C = S e^{-qT} N(d_1) - K e^{-rT} N(d_2)")
+    st.latex(r"P = K e^{-rT} N(-d_2) - S e^{-qT} N(-d_1)")
 
-    st.dataframe(data, use_container_width=True, hide_index=True)
+    st.latex(r"d_1 = \frac{\ln(S/K) + (r - q + \frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}}")
+    st.latex(r"d_2 = d_1 - \sigma\sqrt{T}")
+
+
 
 # =========================
 # GREEKS TAB
