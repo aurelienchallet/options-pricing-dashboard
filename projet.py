@@ -288,12 +288,12 @@ st.divider()
 # TABS
 # =========================
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+tab1, tab2, tab3, tab5, tab4, tab6 = st.tabs([
     "Black Scholes",
     "Greeks",
     "Payoff",
-    "Scenario Grid",
     "Implied Volatility",
+    "Scenario Grid",
     "Volatility Skew"
 ])
 
