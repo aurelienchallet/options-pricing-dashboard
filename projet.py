@@ -685,9 +685,11 @@ with tab6:
     base_vol = sigma
     moneyness = strikes / K
 
+    
+
     skew = base_vol \
-    + 0.18 * (moneyness - 1) ** 2 \
-    + 0.08 * np.maximum(1 - moneyness, 0)
+    + 0.35 * (moneyness - 1) ** 2 \
+    + 0.10 * np.maximum(1 - moneyness, 0)
 
     fig = go.Figure()
 
