@@ -211,7 +211,7 @@ def plotly_layout(fig, title):
 # =========================
 
 st.sidebar.title("Options Pricing Dashboard")
-st.sidebar.caption("Professional derivatives analytics terminal")
+st.sidebar.caption("Derivatives analytics terminal")
 
 st.sidebar.divider()
 
@@ -241,7 +241,7 @@ st.sidebar.markdown("""
 
 st.title("Options Pricing Dashboard")
 st.markdown(
-    "<p class='small-text'>A professional dashboard for Black Scholes pricing, Greeks, implied volatility, payoff analysis, scenario grids and volatility skew.</p>",
+    "<p class='small-text'>An interactive dashboard for Black Scholes options pricing, Greeks, implied volatility, payoff analysis, scenario grids and volatility skew.</p>",
     unsafe_allow_html=True
 )
 
