@@ -562,8 +562,7 @@ with tab5:
 
     st.markdown("""
     <div class="info-box">
-    Implied volatility is the volatility level that makes the Black Scholes theoretical price equal to the observed market price.
-    Traders often quote options in volatility rather than in price because implied volatility allows comparison across strikes and maturities.
+    Enter the observed market price of the option to estimate its implied volatility.
     </div>
     """, unsafe_allow_html=True)
 
