@@ -469,7 +469,7 @@ with tab2:
 
 with tab3:
 
-    S_range = np.linspace(S * 0.5, S * 1.5, 200)
+    S_range = np.linspace(0, S * 2, 300)
 
     call_payoff = np.maximum(S_range - K, 0)
     put_payoff = np.maximum(K - S_range, 0)
