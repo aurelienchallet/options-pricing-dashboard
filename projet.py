@@ -317,6 +317,55 @@ with tab1:
     st.latex(r"d_1 = \frac{\ln(S/K) + (r - q + \frac{1}{2}\sigma^2)T}{\sigma\sqrt{T}}")
     st.latex(r"d_2 = d_1 - \sigma\sqrt{T}")
 
+st.markdown("### Model Inputs")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Spot Price</div>
+        <div class="metric-value">{S}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Strike</div>
+        <div class="metric-value">{K}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Maturity</div>
+        <div class="metric-value">{T}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Volatility</div>
+        <div class="metric-value">{sigma:.2%}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Risk-Free Rate</div>
+        <div class="metric-value">{r:.2%}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Dividend Yield</div>
+        <div class="metric-value">{q:.2%}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 
 
 # =========================
