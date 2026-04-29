@@ -582,12 +582,7 @@ with tab5:
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <div class="info-box">
-    If the implied volatility is higher than your own expected future realised volatility, the option may appear expensive.
-    If it is lower, the option may appear cheap, depending on hedging costs, liquidity and risk preferences.
-    </div>
-    """, unsafe_allow_html=True)
+
 
 # =========================
 # VOL SKEW TAB
