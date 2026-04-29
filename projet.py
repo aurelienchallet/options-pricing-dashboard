@@ -374,31 +374,67 @@ with tab1:
 # GREEKS TAB
 # =========================
 
-with tab2:
-    st.header("Greeks Monitor")
+st.markdown("### Greeks Overview")
 
-    st.markdown("""
-    <div class="info-box">
-    Greeks measure the sensitivity of an option price to changes in market variables.
-    They are essential for risk management, hedging and understanding the behaviour of an options portfolio.
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Δ Call Delta</div>
+        <div class="metric-value">{greeks_result["Call Delta"]:.4f}</div>
     </div>
     """, unsafe_allow_html=True)
 
-    greek_df = pd.DataFrame({
-        "Greek": list(greeks_result.keys()),
-        "Value": list(greeks_result.values())
-    })
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Γ Gamma</div>
+        <div class="metric-value">{greeks_result["Gamma"]:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.dataframe(greek_df, use_container_width=True, hide_index=True)
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Θ Call Theta</div>
+        <div class="metric-value">{greeks_result["Call Theta"]:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    fig = go.Figure()
-    fig.add_trace(go.Bar(
-        x=greek_df["Greek"],
-        y=greek_df["Value"],
-        marker_color="#38bdf8"
-    ))
-    fig = plotly_layout(fig, "Greeks Overview")
-    st.plotly_chart(fig, use_container_width=True)
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">ρ Call Rho</div>
+        <div class="metric-value">{greeks_result["Call Rho"]:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Δ Put Delta</div>
+        <div class="metric-value">{greeks_result["Put Delta"]:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">ν Vega</div>
+        <div class="metric-value">{greeks_result["Vega"]:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Θ Put Theta</div>
+        <div class="metric-value">{greeks_result["Put Theta"]:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">ρ Put Rho</div>
+        <div class="metric-value">{greeks_result["Put Rho"]:.4f}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # =========================
 # PAYOFF TAB
