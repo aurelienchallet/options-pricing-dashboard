@@ -462,7 +462,82 @@ with tab2:
             <div class="greek-value">{greeks_result["Put Rho"]:.4f}</div>
         </div>
         """, unsafe_allow_html=True)
+# =========================
+# PAYOFF TAB
+# =========================
 
+with tab3:
+
+    S_range = np.linspace(0, 2 * K, 300)
+
+    # Payoff
+    call_payoff = np.maximum(S_range - K, 0)
+    put_payoff = np.maximum(K - S_range, 0)
+
+    # Profit (payoff - premium)
+    call_profit = call_payoff - call_price
+    put_profit = put_payoff - put_price
+
+    fig = go.Figure()
+
+    # Call
+    fig.add_trace(go.Scatter(
+        x=S_range,
+        y=call_profit,
+        mode="lines",
+        name="Call Profit",
+        line=dict(width=3)
+    ))
+
+    # Put
+    fig.add_trace(go.Scatter(
+        x=S_range,
+        y=put_profit,
+        mode="lines",
+        name="Put Profit",
+        line=dict(width=3)
+    ))
+
+    # Zero line
+    fig.add_hline(y=0, line_dash="dash", line_color="white")
+
+    # Strike
+    fig.add_vline(x=K, line_dash="dash", line_color="#facc15")
+
+    # Layout
+    fig.update_layout(
+        title=dict(
+            text="Payoff and Profit Analysis",
+            font=dict(color="white", size=22),
+            x=0.02
+        ),
+        template="plotly_dark",
+        paper_bgcolor="#0f172a",
+        plot_bgcolor="#0f172a",
+        font=dict(color="white"),
+        legend=dict(
+            font=dict(color="white"),
+            bgcolor="rgba(0,0,0,0)"
+        ),
+        margin=dict(l=40, r=40, t=50, b=40),
+        height=520
+    )
+
+    fig.update_xaxes(
+        title="Underlying Price at Maturity",
+        title_font=dict(color="white"),
+        tickfont=dict(color="white"),
+        gridcolor="rgba(255,255,255,0.20)"
+    )
+
+    fig.update_yaxes(
+        title="Profit and Loss",
+        title_font=dict(color="white"),
+        tickfont=dict(color="white"),
+        gridcolor="rgba(255,255,255,0.20)"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 # =========================
 # SCENARIO GRID TAB
