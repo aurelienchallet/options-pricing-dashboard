@@ -665,7 +665,7 @@ with tab5:
 
 with tab6:
     st.markdown("""
-    ###Volatility Skew
+    ### Volatility Skew
     The Black–Scholes model assumes constant volatility across strikes.
 
     In reality, implied volatility varies with strike. 
