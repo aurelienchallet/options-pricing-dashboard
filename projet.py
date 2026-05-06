@@ -288,13 +288,12 @@ st.divider()
 # TABS
 # =========================
 
-tab1, tab2, tab3, tab5, tab4, tab6 = st.tabs([
+tab1, tab2, tab3, tab5, tab4 = st.tabs([
     "Black Scholes",
     "Greeks",
     "Payoff",
     "Implied Volatility",
-    "Scenario Grid",
-    "Volatility Skew"
+    "Scenario Grid"
 ])
 
 # =========================
@@ -659,70 +658,7 @@ with tab5:
 
 
 
-# =========================
-# VOLATILITY SKEW TAB
-# =========================
 
-with tab6:
-    st.markdown("""
-    ### Volatility Skew
-    The Black–Scholes model assumes constant volatility across strikes.
-
-    In reality, implied volatility varies with strike. 
-    Out-of-the-money puts typically exhibit higher implied volatility than calls, 
-    reflecting the market’s demand for downside protection.
-
-    For illustration purposes, the chart below shows a typical volatility skew shape.
-    """)
-
-    # Strike range
-    strikes = np.linspace(0.7 * K, 1.3 * K, 100)
-
-    # Stylised skew (example, not real data)
-    base_vol = sigma
-    moneyness = strikes / K
-
-    
-
-    skew = base_vol \
-    + 0.35 * (moneyness - 1) ** 2 \
-    + 0.10 * np.maximum(1 - moneyness, 0)
-
-    fig = go.Figure()
-
-    fig.add_trace(go.Scatter(
-        x=strikes,
-        y=skew,
-        mode="lines",
-        name="Implied Volatility",
-        line=dict(width=3)
-    ))
-
-    # ATM line
-    fig.add_vline(x=K, line_dash="dash", line_color="#facc15")
-
-    fig.update_layout(
-        template="plotly_dark",
-        paper_bgcolor="#0f172a",
-        plot_bgcolor="#0f172a",
-        font=dict(color="white"),
-        margin=dict(l=40, r=40, t=20, b=40),
-        height=450
-    )
-
-    fig.update_xaxes(
-        title="Strike",
-        title_font=dict(color="white"),
-        tickfont=dict(color="white")
-    )
-
-    fig.update_yaxes(
-        title="Implied Volatility",
-        title_font=dict(color="white"),
-        tickfont=dict(color="white")
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
 
     
 
