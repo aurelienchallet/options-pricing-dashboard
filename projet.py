@@ -245,7 +245,7 @@ sigma = st.sidebar.number_input("Volatility", min_value=0.001, value=0.20, step=
 q = st.sidebar.number_input("Dividend Yield", value=0.00, step=0.005, format="%.4f")
 
 st.sidebar.divider()
-st.sidebar.caption("Inputs are expressed in decimals. Example: 20 percent volatility equals 0.20.")
+st.sidebar.caption("Inputs are expressed in decimals. Example: 20 percent volatility equals 0,20.")
 
 st.sidebar.markdown("""
 <div style="margin-top:8px; padding-top:8px; border-top:1px solid #1e293b; text-align:center;">
