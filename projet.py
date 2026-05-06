@@ -61,6 +61,28 @@ p, label, span, div {
     font-weight: 700;
 }
 
+/* 🔥 SMALL CARDS (NOUVEAU) */
+.small-card {
+    background: linear-gradient(135deg, #111827, #1e293b);
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    margin-bottom: 8px;
+}
+
+.small-card-title {
+    color: #94a3b8;
+    font-size: 11px;
+    margin-bottom: 2px;
+}
+
+.small-card-value {
+    color: #38bdf8;
+    font-size: 18px;
+    font-weight: 700;
+}
+
 .info-box {
     background: #0f172a;
     padding: 22px;
@@ -635,10 +657,6 @@ with tab4:
 # IMPLIED VOL TAB
 # =========================
 
-# =========================
-# IMPLIED VOL TAB
-# =========================
-
 with tab5:
     st.header("Implied Volatility Solver")
 
@@ -650,48 +668,50 @@ with tab5:
 
     left_col, right_col = st.columns([1, 1])
 
+    # LEFT SIDE
     with left_col:
         st.markdown("### Model Inputs")
 
-        input_col1, input_col2 = st.columns(2)
+        col1, col2 = st.columns(2)
 
-        with input_col1:
+        with col1:
             st.markdown(f"""
-            <div class="metric-card">
-                <div class="metric-title">Spot Price</div>
-                <div class="metric-value">{S}</div>
+            <div class="small-card">
+                <div class="small-card-title">Spot Price</div>
+                <div class="small-card-value">{S}</div>
             </div>
             """, unsafe_allow_html=True)
 
             st.markdown(f"""
-            <div class="metric-card">
-                <div class="metric-title">Maturity</div>
-                <div class="metric-value">{T}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with input_col2:
-            st.markdown(f"""
-            <div class="metric-card">
-                <div class="metric-title">Strike</div>
-                <div class="metric-value">{K}</div>
+            <div class="small-card">
+                <div class="small-card-title">Maturity</div>
+                <div class="small-card-value">{T}</div>
             </div>
             """, unsafe_allow_html=True)
 
             st.markdown(f"""
-            <div class="metric-card">
-                <div class="metric-title">Risk-Free Rate</div>
-                <div class="metric-value">{r:.2%}</div>
+            <div class="small-card">
+                <div class="small-card-title">Dividend Yield</div>
+                <div class="small-card-value">{q:.2%}</div>
             </div>
             """, unsafe_allow_html=True)
 
-        st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-title">Dividend Yield</div>
-            <div class="metric-value">{q:.2%}</div>
-        </div>
-        """, unsafe_allow_html=True)
+        with col2:
+            st.markdown(f"""
+            <div class="small-card">
+                <div class="small-card-title">Strike</div>
+                <div class="small-card-value">{K}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
+            st.markdown(f"""
+            <div class="small-card">
+                <div class="small-card-title">Risk-Free Rate</div>
+                <div class="small-card-value">{r:.2%}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    # RIGHT SIDE
     with right_col:
         st.markdown("### Market Price")
 
@@ -726,7 +746,6 @@ with tab5:
             <div class="metric-value">{iv:.2%}</div>
         </div>
         """, unsafe_allow_html=True)
-
 
 
 
