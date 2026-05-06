@@ -239,15 +239,12 @@ st.sidebar.markdown("""
 # HEADER
 # =========================
 
-show_sidebar = st.toggle("Show sidebar", value=True)
+st.title("Options Pricing Dashboard")
 
-if show_sidebar:
-    S = st.sidebar.number_input("Spot Price", value=S)
-    K = st.sidebar.number_input("Strike Price", value=K)
-    T = st.sidebar.number_input("Maturity", value=T)
-    r = st.sidebar.number_input("Risk-Free Rate", value=r)
-    sigma = st.sidebar.number_input("Volatility", value=sigma)
-    q = st.sidebar.number_input("Dividend Yield", value=q)
+st.markdown(
+    "<p class='small-text'>An interactive dashboard for Black Scholes options pricing, Greeks, implied volatility, payoff analysis, scenario grids and volatility skew.</p>",
+    unsafe_allow_html=True
+)
 
 # =========================
 # TOP METRICS
