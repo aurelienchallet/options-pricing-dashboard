@@ -631,30 +631,58 @@ with tab4:
 # IMPLIED VOL TAB
 # =========================
 
+# =========================
+# IMPLIED VOL TAB
+# =========================
+
 with tab5:
     st.header("Implied Volatility Solver")
 
     st.markdown("""
     <div class="info-box">
-    Enter the observed market price of the option to estimate its implied volatility.
+    Enter market inputs and the observed option price to estimate implied volatility.
     </div>
     """, unsafe_allow_html=True)
 
-    col_a, col_b = st.columns(2)
+    option_type_iv = st.radio(
+        "Option Type",
+        ["Call", "Put"],
+        horizontal=True,
+        key="iv_option_type"
+    )
 
-    with col_a:
-        option_type_iv = st.radio("Option Type for IV", ["Call", "Put"], horizontal=True)
-        market_price = st.number_input("Market Option Price", min_value=0.01, value=float(call_price if option_type_iv == "Call" else put_price), step=0.1)
+    col1, col2 = st.columns(2)
 
-    with col_b:
-        iv = implied_volatility(market_price, S, K, T, r, q, option_type_iv)
+    with col1:
+        S_iv = st.number_input("Spot Price", value=S, key="iv_S")
+        K_iv = st.number_input("Strike", value=K, key="iv_K")
+        T_iv = st.number_input("Maturity", value=T, key="iv_T")
 
-        st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-title">Implied Volatility</div>
-            <div class="metric-value">{iv:.2%}</div>
-        </div>
-        """, unsafe_allow_html=True)
+    with col2:
+        r_iv = st.number_input("Risk-Free Rate", value=r, key="iv_r")
+        q_iv = st.number_input("Dividend Yield", value=q, key="iv_q")
+        market_price = st.number_input(
+            "Market Price",
+            value=float(call_price if option_type_iv == "Call" else put_price),
+            key="iv_price"
+        )
+
+    iv = implied_volatility(
+        market_price,
+        S_iv,
+        K_iv,
+        T_iv,
+        r_iv,
+        q_iv,
+        option_type_iv
+    )
+
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">Implied Volatility</div>
+        <div class="metric-value">{iv:.2%}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 
