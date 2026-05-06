@@ -239,12 +239,22 @@ st.sidebar.markdown("""
 # HEADER
 # =========================
 
+# HEADER
 st.title("Options Pricing Dashboard")
+st.markdown(...)
 
-st.markdown(
-    "<p class='small-text'>An interactive dashboard for Black Scholes options pricing, Greeks, implied volatility, payoff analysis, scenario grids and volatility skew.</p>",
-    unsafe_allow_html=True
-)
+# MODEL CALCULATION
+result = black_scholes(S, K, T, r, sigma, q)
+greeks_result = greeks(S, K, T, r, sigma, q)
+
+if result is None:
+    st.error("Please check your inputs.")
+    st.stop()
+
+call_price, put_price, d1, d2 = result
+
+# TOP METRICS
+col1, col2, col3, col4 = st.columns(4)
 
 # =========================
 # TOP METRICS
