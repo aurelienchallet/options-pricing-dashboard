@@ -635,12 +635,16 @@ with tab4:
 # IMPLIED VOL TAB
 # =========================
 
+# =========================
+# IMPLIED VOL TAB
+# =========================
+
 with tab5:
     st.header("Implied Volatility Solver")
 
     st.markdown("""
     <div class="info-box">
-    Enter market inputs and the observed option price to estimate implied volatility.
+    Enter the observed market price of the option to estimate its implied volatility.
     </div>
     """, unsafe_allow_html=True)
 
@@ -652,14 +656,41 @@ with tab5:
         input_col1, input_col2 = st.columns(2)
 
         with input_col1:
-            S_iv = st.number_input("Spot Price", min_value=0.01, value=float(S), step=1.0, key="iv_spot")
-            T_iv = st.number_input("Maturity", min_value=0.01, value=float(T), step=0.05, key="iv_maturity")
-            r_iv = st.number_input("Risk-Free Rate", value=float(r), step=0.005, format="%.4f", key="iv_rate")
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Spot Price</div>
+                <div class="metric-value">{S}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Maturity</div>
+                <div class="metric-value">{T}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
         with input_col2:
-            K_iv = st.number_input("Strike", min_value=0.01, value=float(K), step=1.0, key="iv_strike")
-            sigma_iv = st.number_input("Volatility", min_value=0.001, value=float(sigma), step=0.01, format="%.4f", key="iv_volatility")
-            q_iv = st.number_input("Dividend Yield", value=float(q), step=0.005, format="%.4f", key="iv_dividend")
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Strike</div>
+                <div class="metric-value">{K}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Risk-Free Rate</div>
+                <div class="metric-value">{r:.2%}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">Dividend Yield</div>
+            <div class="metric-value">{q:.2%}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     with right_col:
         st.markdown("### Market Price")
@@ -681,11 +712,11 @@ with tab5:
 
         iv = implied_volatility(
             market_price,
-            S_iv,
-            K_iv,
-            T_iv,
-            r_iv,
-            q_iv,
+            S,
+            K,
+            T,
+            r,
+            q,
             option_type_iv
         )
 
