@@ -211,7 +211,7 @@ def plotly_layout(fig, title):
 # =========================
 
 st.sidebar.title("Options Pricing Dashboard")
-st.sidebar.caption("Derivatives analytics terminal")
+st.sidebar.caption("Options pricing and analytics terminal")
 
 st.sidebar.divider()
 
