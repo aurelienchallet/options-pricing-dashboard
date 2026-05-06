@@ -239,15 +239,15 @@ st.sidebar.markdown("""
 # HEADER
 # =========================
 
-if show_sidebar:
-    st.sidebar.title("Options Pricing Dashboard")
+show_sidebar = st.toggle("Show sidebar", value=True)
 
-    S = st.sidebar.number_input("Spot Price", min_value=0.01, value=100.0)
-    K = st.sidebar.number_input("Strike Price", min_value=0.01, value=100.0)
-    T = st.sidebar.number_input("Maturity", min_value=0.01, value=1.0)
-    r = st.sidebar.number_input("Risk-Free Rate", value=0.03)
-    sigma = st.sidebar.number_input("Volatility", value=0.20)
-    q = st.sidebar.number_input("Dividend Yield", value=0.00)
+if show_sidebar:
+    S = st.sidebar.number_input("Spot Price", value=S)
+    K = st.sidebar.number_input("Strike Price", value=K)
+    T = st.sidebar.number_input("Maturity", value=T)
+    r = st.sidebar.number_input("Risk-Free Rate", value=r)
+    sigma = st.sidebar.number_input("Volatility", value=sigma)
+    q = st.sidebar.number_input("Dividend Yield", value=q)
 
 # =========================
 # TOP METRICS
