@@ -239,20 +239,15 @@ st.sidebar.markdown("""
 # HEADER
 # =========================
 
-st.title("Options Pricing Dashboard")
-st.markdown(
-    "<p class='small-text'>An interactive dashboard for Black Scholes options pricing, Greeks, payoff analysis, implied volatility and scenario grids.</p>",
-    unsafe_allow_html=True
-)
+if show_sidebar:
+    st.sidebar.title("Options Pricing Dashboard")
 
-result = black_scholes(S, K, T, r, sigma, q)
-greeks_result = greeks(S, K, T, r, sigma, q)
-
-if result is None:
-    st.error("Please check your inputs.")
-    st.stop()
-
-call_price, put_price, d1, d2 = result
+    S = st.sidebar.number_input("Spot Price", min_value=0.01, value=100.0)
+    K = st.sidebar.number_input("Strike Price", min_value=0.01, value=100.0)
+    T = st.sidebar.number_input("Maturity", min_value=0.01, value=1.0)
+    r = st.sidebar.number_input("Risk-Free Rate", value=0.03)
+    sigma = st.sidebar.number_input("Volatility", value=0.20)
+    q = st.sidebar.number_input("Dividend Yield", value=0.00)
 
 # =========================
 # TOP METRICS
