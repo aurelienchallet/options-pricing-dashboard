@@ -629,6 +629,8 @@ with tab4:
 
     st.plotly_chart(fig, use_container_width=True)
 
+
+
 # =========================
 # IMPLIED VOL TAB
 # =========================
@@ -638,34 +640,52 @@ with tab5:
 
     st.markdown("""
     <div class="info-box">
-    Enter the observed market price of the option to estimate its implied volatility.
+    Enter market inputs and the observed option price to estimate implied volatility.
     </div>
     """, unsafe_allow_html=True)
 
-    col_a, col_b = st.columns(2)
+    left_col, right_col = st.columns([1, 1])
 
-    with col_a:
+    with left_col:
+        st.markdown("### Model Inputs")
+
+        input_col1, input_col2 = st.columns(2)
+
+        with input_col1:
+            S_iv = st.number_input("Spot Price", min_value=0.01, value=float(S), step=1.0, key="iv_spot")
+            T_iv = st.number_input("Maturity", min_value=0.01, value=float(T), step=0.05, key="iv_maturity")
+            r_iv = st.number_input("Risk-Free Rate", value=float(r), step=0.005, format="%.4f", key="iv_rate")
+
+        with input_col2:
+            K_iv = st.number_input("Strike", min_value=0.01, value=float(K), step=1.0, key="iv_strike")
+            sigma_iv = st.number_input("Volatility", min_value=0.001, value=float(sigma), step=0.01, format="%.4f", key="iv_volatility")
+            q_iv = st.number_input("Dividend Yield", value=float(q), step=0.005, format="%.4f", key="iv_dividend")
+
+    with right_col:
+        st.markdown("### Market Price")
+
         option_type_iv = st.radio(
-            "Option Type for IV",
+            "Option Type",
             ["Call", "Put"],
-            horizontal=True
+            horizontal=True,
+            key="iv_option_type"
         )
 
         market_price = st.number_input(
             "Market Option Price",
             min_value=0.01,
             value=float(call_price if option_type_iv == "Call" else put_price),
-            step=0.1
+            step=0.1,
+            key="iv_market_price"
         )
 
-    with col_b:
         iv = implied_volatility(
             market_price,
-            S,
-            K,
-            T,
-            r,
-            q,
+            S_iv,
+            K_iv,
+            T_iv,
+            r_iv,
+            q_iv,
             option_type_iv
         )
 
@@ -675,7 +695,6 @@ with tab5:
             <div class="metric-value">{iv:.2%}</div>
         </div>
         """, unsafe_allow_html=True)
-
 
 
 
