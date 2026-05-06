@@ -261,9 +261,12 @@ st.sidebar.markdown("""
 # HEADER
 # =========================
 
-# HEADER
 st.title("Options Pricing Dashboard")
-st.markdown(...)
+
+st.markdown(
+    "<p class='small-text'>An interactive dashboard for Black Scholes options pricing, Greeks, implied volatility, payoff analysis and scenario grids.</p>",
+    unsafe_allow_html=True
+)
 
 # MODEL CALCULATION
 result = black_scholes(S, K, T, r, sigma, q)
@@ -316,7 +319,7 @@ tab1, tab2, tab3, tab5, tab4 = st.tabs([
     "Black Scholes",
     "Greeks",
     "Payoff",
-    "Implied Volatility",
+    "Implied Volatility Solver",
     "Scenario Grid"
 ])
 
