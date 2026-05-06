@@ -264,7 +264,7 @@ st.sidebar.markdown("""
 st.title("Options Pricing Dashboard")
 
 st.markdown(
-    "<p class='small-text'>An interactive dashboard for Black Scholes options pricing, Greeks, implied volatility, payoff analysis and scenario grids.</p>",
+    "<p class='small-text'>An interactive dashboard for Black Scholes options pricing, Greeks, payoff analysis, implied volatility and scenario grids.</p>",
     unsafe_allow_html=True
 )
 
