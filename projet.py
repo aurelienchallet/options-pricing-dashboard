@@ -626,10 +626,6 @@ with tab4:
 # IMPLIED VOL TAB
 # =========================
 
-# =========================
-# IMPLIED VOL TAB
-# =========================
-
 with tab5:
     st.header("Implied Volatility Solver")
 
